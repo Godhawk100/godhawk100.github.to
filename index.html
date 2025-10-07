@@ -120,57 +120,47 @@
             <a href="https://www.google.com/maps/search/?api=1&query=A-55+sikar+house,+jaipur" target="_blank" class="animate-on-load link-1">📍 Find Our Location</a>
             <a href="https://nikhilinternational.com" target="_blank" class="animate-on-load link-2">🌐 Visit Our Website</a>
             
-            <!-- *** STEP 1: ADD AN ID TO THE CONTACT LINK *** -->
-            <a id="saveContactLink" href="data:text/vcard;charset=utf-8,BEGIN%3AVCARD%0AVERSION%3A3.0%0AFN%3ANikhil%20Sangtani%0AORG%3ANikhil%20International%0ATITLE%3AProprietor%0ATEL%3BTYPE%3DWORK%2CVOICE%3A7791800501%0AADR%3BTYPE%3DWORK%3A%3B%3BA-55%20sikar%20house%3BJaipur%3B%3B%3B%0AEMAIL%3Anijaipur%40gmail.com%0AURL%3Ahttps%3A//nikhilinternational.com%0AEND%3AVCARD%0A" class="animate-on-load link-3">👤 Save My Contact</a>
+            <!-- STEP 1: THE VCARD DATA IS NOW CORRECTED WITH THE 'N' FIELD -->
+            <a id="saveContactLink" href="data:text/vcard;charset=utf-8,BEGIN%3AVCARD%0AVERSION%3A3.0%0AN%3ASangtani%3BNikhil%3B%3B%3B%0AFN%3ANikhil%20Sangtani%0AORG%3ANikhil%20International%0ATITLE%3AProprietor%0ATEL%3BTYPE%3DWORK%2CVOICE%3A7791800501%0AADR%3BTYPE%3DWORK%3A%3B%3BA-55%20sikar%20house%3BJaipur%3B%3B%3B%0AEMAIL%3Anijaipur%40gmail.com%0AURL%3Ahttps%3A//nikhilinternational.com%0AEND%3AVCARD%0A" class="animate-on-load link-3">👤 Save My Contact</a>
             
             <a href="catalog.pdf" download="Nikhil_International_Catalog.pdf" class="animate-on-load link-4 secondary">📄 Download Catalog</a>
         </div>
     </div>
 
-    <!-- *** STEP 2: ADD THIS SCRIPT AT THE END OF THE BODY *** -->
+    <!-- STEP 2: THE JAVASCRIPT IS NOW MORE ROBUST -->
     <script>
         // This first part runs the animations
         window.addEventListener('load', () => {
             document.body.classList.add('loaded');
         });
 
-        // This is the new part for the improved contact saving
+        // This is the new, more robust part for contact saving
         const saveContactButton = document.getElementById('saveContactLink');
 
-        if (saveContactButton && navigator.share) {
-            saveContactButton.addEventListener('click', async (event) => {
-                // Prevent the default download behavior
+        saveContactButton.addEventListener('click', async (event) => {
+            // First, check if the Web Share API for files is supported
+            const vcardDataUrl = saveContactButton.href;
+            const response = await fetch(vcardDataUrl);
+            const vcardBlob = await response.blob();
+            const vcardFile = new File([vcardBlob], "Nikhil_Sangtani_Contact.vcf", { type: "text/vcard" });
+
+            if (navigator.canShare && navigator.canShare({ files: [vcardFile] })) {
+                // If it is supported, prevent the default download
                 event.preventDefault();
-
-                // Get the vCard data from the link's href
-                const vcardDataUrl = saveContactButton.href;
-                
-                // Fetch the data and convert it to a Blob
-                const response = await fetch(vcardDataUrl);
-                const vcardBlob = await response.blob();
-
-                // Create a virtual file from the Blob
-                const vcardFile = new File([vcardBlob], "Nikhil_Sangtani_Contact.vcf", { type: "text/vcard" });
-
-                // Check if the browser can share this file
-                if (navigator.canShare && navigator.canShare({ files: [vcardFile] })) {
-                    try {
-                        // Open the native share sheet
-                        await navigator.share({
-                            files: [vcardFile],
-                            title: 'Nikhil Sangtani Contact',
-                            text: 'Here is the contact information for Nikhil International.'
-                        });
-                    } catch (error) {
-                        // Handle cases where the user cancels the share sheet etc.
-                        console.log('Share failed:', error);
-                    }
-                } else {
-                    // Fallback for browsers that can't share files
+                try {
+                    // Try to open the native share sheet
+                    await navigator.share({
+                        files: [vcardFile],
+                        title: 'Nikhil Sangtani Contact'
+                    });
+                } catch (error) {
+                    // If sharing fails (e.g., user cancels), fall back to the download
+                    console.log('Share failed, falling back to download:', error);
                     window.location.href = vcardDataUrl;
                 }
-            });
-        }
+            }
+            // If the API is not supported, do nothing and let the default download happen
+        });
     </script>
 </body>
 </html>
