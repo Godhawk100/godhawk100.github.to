@@ -119,49 +119,68 @@
             <a href="https://www.google.com/maps/search/?api=1&query=A-55+sikar+house,+jaipur" target="_blank" class="animate-on-load link-1">📍 Find Our Location</a>
             <a href="https://nikhilinternational.com" target="_blank" class="animate-on-load link-2">🌐 Visit Our Website</a>
             
-            <!-- vCard data has been slightly restructured for maximum compatibility -->
             <a id="saveContactLink" href="data:text/vcard;charset=utf-8,BEGIN%3AVCARD%0AVERSION%3A3.0%0AFN%3ANikhil%20Sangtani%0AN%3ASangtani%3BNikhil%3B%3B%3B%0AORG%3ANikhil%20International%0ATITLE%3AProprietor%0ATEL%3BTYPE%3DWORK%2CVOICE%3A7791800501%0AADR%3BTYPE%3DWORK%3A%3B%3BA-55%20sikar%20house%3BJaipur%3B%3B%3B%0AEMAIL%3Anijaipur%40gmail.com%0AURL%3Ahttps%3A//nikhilinternational.com%0AEND%3AVCARD%0A" class="animate-on-load link-3">👤 Save My Contact</a>
             
             <a href="catalog.pdf" download="Nikhil_International_Catalog.pdf" class="animate-on-load link-4 secondary">📄 Download Catalog</a>
         </div>
     </div>
 
-    <!-- The entire script has been rewritten to be more robust -->
+    <!-- This is the final, most reliable script for handling contact saving. -->
     <script>
         window.addEventListener('load', () => {
             document.body.classList.add('loaded');
         });
 
         const saveContactButton = document.getElementById('saveContactLink');
-        saveContactButton.addEventListener('click', (event) => {
-            // ALWAYS prevent the default download first.
+        
+        saveContactButton.addEventListener('click', async (event) => {
+            // Always prevent the default link behavior first.
             event.preventDefault();
 
-            // The original link with the vCard data.
             const vcardUrl = saveContactButton.href;
+            const filename = "Nikhil_Sangtani.vcf";
 
-            // Check if the modern Web Share API is supported at all.
-            if (navigator.share) {
-                fetch(vcardUrl)
-                    .then(res => res.blob())
-                    .then(blob => {
-                        const file = new File([blob], "Nikhil_Sangtani.vcf", { type: "text/vcard" });
-                        // Now, try to share this file.
-                        navigator.share({
+            // The guaranteed fallback function.
+            const triggerDownload = () => {
+                const link = document.createElement('a');
+                link.href = vcardUrl;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            };
+
+            // Check if Web Share API and file sharing are supported.
+            if (navigator.share && typeof File === "function") {
+                try {
+                    // Fetch the vCard data and create a file object.
+                    const response = await fetch(vcardUrl);
+                    const blob = await response.blob();
+                    const file = new File([blob], filename, { type: 'text/vcard' });
+
+                    // Check if the browser can share this specific file.
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        // Attempt to open the share sheet.
+                        await navigator.share({
                             files: [file],
-                            title: 'Nikhil Sangtani Contact',
-                        })
-                        .catch((error) => {
-                             // This catch block runs if the user cancels the share, or if sharing fails.
-                             console.log('Sharing failed or was cancelled, falling back to download:', error);
-                             // If it fails, trigger the download manually.
-                             window.location.href = vcardUrl;
+                            title: 'Nikhil Sangtani Contact'
                         });
-                    });
+                        // If we get here, the share was successful. We're done.
+                        return;
+                    } else {
+                        // If it can't share for some reason, trigger the fallback.
+                        throw new Error("Cannot share files on this browser.");
+                    }
+                } catch (error) {
+                    // This block catches any error, including user cancellation ("AbortError").
+                    console.log("Web Share failed or was cancelled:", error);
+                    // No matter the error, proceed to the guaranteed fallback.
+                    triggerDownload();
+                }
             } else {
-                // If navigator.share doesn't even exist, fall back to the download immediately.
-                console.log('Web Share API not supported, falling back to download.');
-                window.location.href = vcardUrl;
+                // If the Web Share API doesn't exist at all, trigger the fallback.
+                console.log("Web Share API not supported. Falling back to download.");
+                triggerDownload();
             }
         });
     </script>
