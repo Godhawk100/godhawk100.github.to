@@ -5,25 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nikhil International | Welcome</title>
     
-    <!-- New fonts to match your elegant branding -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
-        /* --- THEME & COLOR VARIABLES --- */
         :root {
             /* Light Mode (default) */
-            --background-color: #F5F1EC; /* Light beige from your card */
+            --background-color: #F5F1EC;
             --text-color: #333333;
             --heading-color: #2b2b2b;
-            --primary-color: #8C785D;   /* Muted brown/gold from your card */
+            --primary-color: #8C785D;
             --primary-text: #FFFFFF;
             --card-background: #FFFFFF;
             --shadow-color: rgba(0, 0, 0, 0.08);
         }
-
-        /* Dark Mode */
         @media (prefers-color-scheme: dark) {
             :root {
                 --background-color: #1c1c1c;
@@ -35,10 +31,9 @@
                 --shadow-color: rgba(0, 0, 0, 0.2);
             }
         }
-
         body {
             margin: 0;
-            font-family: 'Lato', sans-serif; /* Clean font for readability */
+            font-family: 'Lato', sans-serif;
             background-color: var(--background-color);
             color: var(--text-color);
             display: flex;
@@ -59,16 +54,14 @@
             box-shadow: 0 12px 28px 0 var(--shadow-color);
             transition: background-color 0.3s ease;
         }
-        
-        /* CSS for your new rectangular logo */
         .header .logo {
-            max-width: 280px; /* Adjust as needed */
+            max-width: 280px;
             width: 80%;
-            height: auto; /* Let the height adjust automatically */
+            height: auto;
             margin: 0 auto 1.5rem auto;
         }
         .header h1 {
-            font-family: 'Playfair Display', serif; /* Elegant font for the title */
+            font-family: 'Playfair Display', serif;
             margin: 0;
             font-weight: 700;
             font-size: 2.2rem;
@@ -93,8 +86,11 @@
             text-decoration: none;
             font-weight: 700;
             font-size: 1rem;
-            transition: all 0.2s ease-in-out;
             border: 1px solid var(--primary-color);
+
+            /* --- THIS IS THE CHANGE FOR A FASTER HOVER --- */
+            /* The duration has been changed from 0.2s to 0.1s */
+            transition: all 0.1s ease-in-out;
         }
         .links-container a:last-child { margin-bottom: 0; }
         .links-container a:hover {
@@ -110,7 +106,6 @@
              background-color: var(--primary-color);
              color: var(--primary-text);
         }
-        /* Animation code remains the same */
         .animate-on-load { opacity: 0; transform: translateY(25px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
         .loaded .animate-on-load { opacity: 1; transform: translateY(0); }
         .loaded .header { transition-delay: 0.1s; }
@@ -124,18 +119,12 @@
 <body>
     <div class="container">
         <div class="header animate-on-load">
-            <!-- IMPORTANT: REPLACE THIS SRC WITH YOUR LOGO FILENAME -->
             <img class="logo" src="logo.png" alt="Nikhil International Logo">
-            
-            <!-- Removed the text titles as they are now part of your logo image -->
         </div>
 
         <div class="links-container">
-            <!-- UPDATED Office Location -->
             <a href="https://maps.app.goo.gl/HmezNhhTYAjexHAE7" target="_blank" class="animate-on-load link-1">📍 Visit Our Office</a>
-            <!-- Factory Location -->
             <a href="https://goo.gl/maps/UVnQYfeqczTdbtqv5" target="_blank" class="animate-on-load link-2">🏭 Visit Our Factory</a>
-            
             <a href="https://nikhilinternational.com" target="_blank" class="animate-on-load link-3">🌐 Visit Our Website</a>
             <a id="saveContactLink" href="data:text/vcard;charset=utf-8,BEGIN%3AVCARD%0AVERSION%3A3.0%0AFN%3ANikhil%20Sangtani%0AN%3ASangtani%3BNikhil%3B%3B%3B%0AORG%3ANikhil%20International%0ATITLE%3AProprietor%0ATEL%3BTYPE%3DWORK%2CVOICE%3A7791800501%0AADR%3BTYPE%3DWORK%3A%3B%3BA-55%20sikar%20house%3BJaipur%3B%3B%3B%0AEMAIL%3Anijaipur%40gmail.com%0AURL%3Ahttps%3A//nikhilinternational.com%0AEND%3AVCARD%0A" class="animate-on-load link-4">👤 Save My Contact</a>
             <a href="catalog.pdf" download="Nikhil_International_Catalog.pdf" class="animate-on-load link-5 secondary">📄 Download Catalog</a>
