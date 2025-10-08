@@ -60,19 +60,6 @@
             height: auto;
             margin: 0 auto 1.5rem auto;
         }
-        .header h1 {
-            font-family: 'Playfair Display', serif;
-            margin: 0;
-            font-weight: 700;
-            font-size: 2.2rem;
-            color: var(--heading-color);
-        }
-        .header p {
-            margin: 0.5rem 0 2.5rem 0;
-            font-weight: 400;
-            font-size: 1.1rem;
-            color: var(--text-color);
-        }
         .links-container a {
             display: flex;
             align-items: center;
@@ -120,20 +107,15 @@
         </div>
 
         <div class="links-container">
-            <!-- Office Location -->
             <a href="https://maps.app.goo.gl/HmezNhhTYAjexHAE7" target="_blank" class="animate-on-load link-1">📍 Visit Our Office</a>
-            
-            <!-- *** FACTORY LOCATION LINK UPDATED HERE *** -->
             <a href="https://maps.app.goo.gl/n365czV1mh7GMY8q8" target="_blank" class="animate-on-load link-2">🏭 Visit Our Factory</a>
-            
-            <!-- Other links -->
             <a href="https://nikhilinternational.com" target="_blank" class="animate-on-load link-3">🌐 Visit Our Website</a>
             <a id="saveContactLink" href="data:text/vcard;charset=utf-8,BEGIN%3AVCARD%0AVERSION%3A3.0%0AFN%3ANikhil%20Sangtani%0AN%3ASangtani%3BNikhil%3B%3B%3B%0AORG%3ANikhil%20International%0ATITLE%3AProprietor%0ATEL%3BTYPE%3DWORK%2CVOICE%3A7791800501%0AADR%3BTYPE%3DWORK%3A%3B%3BA-55%20sikar%20house%3BJaipur%3B%3B%3B%0AEMAIL%3Anijaipur%40gmail.com%0AURL%3Ahttps%3A//nikhilinternational.com%0AEND%3AVCARD%0A" class="animate-on-load link-4">👤 Save My Contact</a>
             <a href="catalog.pdf" download="Nikhil_International_Catalog.pdf" class="animate-on-load link-5 secondary">📄 Download Catalog</a>
         </div>
     </div>
 
-    <!-- The reliable script for contact saving remains the same -->
+    <!-- This is the final, most reliable script for handling contact saving. -->
     <script>
         window.addEventListener('load', () => {
             document.body.classList.add('loaded');
@@ -141,10 +123,13 @@
 
         const saveContactButton = document.getElementById('saveContactLink');
         
-        saveContactButton.addEventListener('click', async (event) => {
+        saveContactButton.addEventListener('click', (event) => {
             event.preventDefault();
+
             const vcardUrl = saveContactButton.href;
             const filename = "Nikhil_Sangtani.vcf";
+
+            // Fallback function to trigger a standard download.
             const triggerDownload = () => {
                 const link = document.createElement('a');
                 link.href = vcardUrl;
@@ -154,26 +139,31 @@
                 document.body.removeChild(link);
             };
 
-            if (navigator.share && typeof File === "function") {
-                try {
-                    const response = await fetch(vcardUrl);
-                    const blob = await response.blob();
-                    const file = new File([blob], filename, { type: 'text/vcard' });
-                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                        await navigator.share({
-                            files: [file],
-                            title: 'Nikhil Sangtani Contact'
-                        });
-                        return;
-                    } else {
-                        throw new Error("Cannot share files on this browser.");
-                    }
-                } catch (error) {
-                    console.log("Web Share failed or was cancelled:", error);
+            // Check if Web Share API is supported.
+            if (navigator.share) {
+                // Manually construct the vCard data without using fetch().
+                // 1. Get the data part of the data: URI.
+                const vcardDataString = vcardUrl.split(',')[1];
+                // 2. Decode the URI-encoded characters (like %0A for newlines).
+                const decodedVcardData = decodeURIComponent(vcardDataString);
+                // 3. Create a Blob (a file-like object) from the string.
+                const vcardBlob = new Blob([decodedVcardData], { type: 'text/vcard' });
+                // 4. Create a File object from the Blob.
+                const vcardFile = new File([vcardBlob], filename, { type: 'text/vcard' });
+                
+                // Now, try to share this manually created file.
+                navigator.share({
+                    files: [vcardFile],
+                    title: 'Nikhil Sangtani Contact'
+                })
+                .catch((error) => {
+                    // This catch block runs if the user cancels or if sharing fails.
+                    console.log('Web Share failed, falling back to download:', error);
                     triggerDownload();
-                }
+                });
             } else {
-                console.log("Web Share API not supported. Falling back to download.");
+                // If Web Share is not supported at all (like on iOS), download directly.
+                console.log('Web Share API not supported, falling back to download.');
                 triggerDownload();
             }
         });
