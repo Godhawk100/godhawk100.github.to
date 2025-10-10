@@ -13,16 +13,16 @@
     <style>
         /* --- THEME & COLOR VARIABLES --- */
         :root {
-            /* Light Mode (default) */
-            --background-color: #F5F1EC; /* Light beige from your branding */
-            --text-color: #333333;
-            --primary-color: #8C785D;   /* Muted brown/gold from your branding */
-            --primary-text: #FFFFFF;
-            --card-background: #FFFFFF;
-            --shadow-color: rgba(0, 0, 0, 0.08);
+            /* Light Mode (updated to match new business card) */
+            --background-color: #FFFFFF; /* Crisp white background */
+            --text-color: #8C785D;       /* Elegant brown/gold for text */
+            --primary-color: #8C785D;    /* Brown/gold for buttons */
+            --primary-text: #FFFFFF;      /* White text on buttons */
+            --card-background: #FFFFFF;   /* Card is also white */
+            --shadow-color: rgba(0, 0, 0, 0.1); /* Slightly more prominent shadow */
         }
 
-        /* Dark Mode (based on your screenshot) */
+        /* Dark Mode (based on your previous screenshot) */
         @media (prefers-color-scheme: dark) {
             :root {
                 --background-color: #1c1c1c;
@@ -62,7 +62,7 @@
             max-width: 280px;
             width: 80%;
             height: auto;
-            margin: 0 auto 2.5rem auto; /* Added more space below the logo */
+            margin: 0 auto 2.5rem auto;
         }
         
         .links-container a {
@@ -109,7 +109,6 @@
 <body>
     <div class="container">
         <div class="header animate-on-load">
-            <!-- The logo is now the only element in the header -->
             <img class="logo" src="logo.png" alt="Nikhil International Logo">
         </div>
 
