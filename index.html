@@ -5,32 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nikhil International | Welcome</title>
     
+    <!-- Fonts to match your elegant branding -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
+        /* --- THEME & COLOR VARIABLES --- */
         :root {
             /* Light Mode (default) */
-            --background-color: #F5F1EC;
+            --background-color: #F5F1EC; /* Light beige from your branding */
             --text-color: #333333;
-            --heading-color: #2b2b2b;
-            --primary-color: #8C785D;
+            --primary-color: #8C785D;   /* Muted brown/gold from your branding */
             --primary-text: #FFFFFF;
             --card-background: #FFFFFF;
             --shadow-color: rgba(0, 0, 0, 0.08);
         }
+
+        /* Dark Mode (based on your screenshot) */
         @media (prefers-color-scheme: dark) {
             :root {
                 --background-color: #1c1c1c;
                 --text-color: #e1e1e1;
-                --heading-color: #ffffff;
                 --primary-color: #8C785D;
                 --primary-text: #FFFFFF;
                 --card-background: #2b2b2b;
                 --shadow-color: rgba(0, 0, 0, 0.2);
             }
         }
+
         body {
             margin: 0;
             font-family: 'Lato', sans-serif;
@@ -54,12 +57,14 @@
             box-shadow: 0 12px 28px 0 var(--shadow-color);
             transition: background-color 0.3s ease;
         }
+        
         .header .logo {
             max-width: 280px;
             width: 80%;
             height: auto;
-            margin: 0 auto 1.5rem auto;
+            margin: 0 auto 2.5rem auto; /* Added more space below the logo */
         }
+        
         .links-container a {
             display: flex;
             align-items: center;
@@ -90,6 +95,7 @@
              background-color: var(--primary-color);
              color: var(--primary-text);
         }
+        
         .animate-on-load { opacity: 0; transform: translateY(25px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
         .loaded .animate-on-load { opacity: 1; transform: translateY(0); }
         .loaded .header { transition-delay: 0.1s; }
@@ -103,6 +109,7 @@
 <body>
     <div class="container">
         <div class="header animate-on-load">
+            <!-- The logo is now the only element in the header -->
             <img class="logo" src="logo.png" alt="Nikhil International Logo">
         </div>
 
@@ -115,7 +122,7 @@
         </div>
     </div>
 
-    <!-- This is the final, most reliable script for handling contact saving. -->
+    <!-- The reliable script for contact saving -->
     <script>
         window.addEventListener('load', () => {
             document.body.classList.add('loaded');
@@ -125,11 +132,8 @@
         
         saveContactButton.addEventListener('click', (event) => {
             event.preventDefault();
-
             const vcardUrl = saveContactButton.href;
             const filename = "Nikhil_Sangtani.vcf";
-
-            // Fallback function to trigger a standard download.
             const triggerDownload = () => {
                 const link = document.createElement('a');
                 link.href = vcardUrl;
@@ -139,30 +143,21 @@
                 document.body.removeChild(link);
             };
 
-            // Check if Web Share API is supported.
             if (navigator.share) {
-                // Manually construct the vCard data without using fetch().
-                // 1. Get the data part of the data: URI.
                 const vcardDataString = vcardUrl.split(',')[1];
-                // 2. Decode the URI-encoded characters (like %0A for newlines).
                 const decodedVcardData = decodeURIComponent(vcardDataString);
-                // 3. Create a Blob (a file-like object) from the string.
                 const vcardBlob = new Blob([decodedVcardData], { type: 'text/vcard' });
-                // 4. Create a File object from the Blob.
                 const vcardFile = new File([vcardBlob], filename, { type: 'text/vcard' });
                 
-                // Now, try to share this manually created file.
                 navigator.share({
                     files: [vcardFile],
                     title: 'Nikhil Sangtani Contact'
                 })
                 .catch((error) => {
-                    // This catch block runs if the user cancels or if sharing fails.
                     console.log('Web Share failed, falling back to download:', error);
                     triggerDownload();
                 });
             } else {
-                // If Web Share is not supported at all (like on iOS), download directly.
                 console.log('Web Share API not supported, falling back to download.');
                 triggerDownload();
             }
