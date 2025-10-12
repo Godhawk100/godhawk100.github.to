@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Welcome to Nikhil International — Quality products with integrity. Visit our office, factory, or download our catalog." />
+  <meta name="description" content="Welcome to Nikhil International — Quality products with integrity. Visit our office, factory, or download our catalogs." />
   <title>Nikhil International | Welcome</title>
 
   <!-- Elegant Fonts -->
@@ -25,6 +25,8 @@
       --primary-text: #ffffff;
       --card-background: #ffffff;
       --shadow-color: rgba(0, 0, 0, 0.1);
+      --shimmer-light: #f6f6f6;
+      --shimmer-dark: #ecebeb;
     }
 
     @media (prefers-color-scheme: dark) {
@@ -35,6 +37,8 @@
         --primary-text: #ffffff;
         --card-background: #2b2b2b;
         --shadow-color: rgba(0, 0, 0, 0.25);
+        --shimmer-light: #2e2e2e;
+        --shimmer-dark: #3a3a3a;
       }
     }
 
@@ -57,8 +61,48 @@
       text-align: center;
       padding: 20px;
       transition: background-color 0.4s ease, color 0.4s ease;
+      overflow: hidden;
     }
 
+    /* ==========================================
+       SHIMMER LOADING SCREEN
+    ========================================== */
+    .shimmer-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        to right,
+        var(--shimmer-light) 0%,
+        var(--shimmer-dark) 20%,
+        var(--shimmer-light) 40%,
+        var(--shimmer-light) 100%
+      );
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      z-index: 10;
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: -200% 0;
+      }
+      100% {
+        background-position: 200% 0;
+      }
+    }
+
+    .fade-out {
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+
+    /* ==========================================
+       CONTAINER
+    ========================================== */
     .container {
       max-width: 420px;
       width: 100%;
@@ -68,10 +112,19 @@
       box-shadow: 0 12px 28px var(--shadow-color);
       transition: background-color 0.4s ease, box-shadow 0.4s ease;
       overflow: hidden;
+      position: relative;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .container.loaded {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.6s ease, transform 0.6s ease;
     }
 
     /* ==========================================
-       LOGO & HEADER
+       LOGO
     ========================================== */
     .header .logo {
       max-width: 260px;
@@ -128,9 +181,6 @@
       color: var(--primary-text);
     }
 
-    /* ==========================================
-       ANIMATIONS ON LOAD
-    ========================================== */
     .animate-on-load {
       animation: fadeUp 0.6s forwards;
     }
@@ -146,6 +196,7 @@
       }
     }
 
+    /* Sequential delays */
     .link-1 { animation-delay: 0.2s; }
     .link-2 { animation-delay: 0.4s; }
     .link-3 { animation-delay: 0.6s; }
@@ -166,43 +217,62 @@
   </style>
 </head>
 <body>
-  <div class="container">
+  <!-- Shimmer Loading Overlay -->
+  <div id="shimmer" class="shimmer-overlay"></div>
+
+  <!-- Main Content -->
+  <div class="container" id="mainContainer">
     <div class="header animate-on-load">
       <img class="logo" src="logo.png" alt="Nikhil International Logo" />
     </div>
 
     <div class="links-container">
-      <a href="https://maps.app.goo.gl/HmezNhhTYAjexHAE7" target="_blank" class="animate-on-load link-1">
-        📍 Visit Our Office
-      </a>
-      <a href="https://maps.app.goo.gl/n365czV1mh7GMY8q8" target="_blank" class="animate-on-load link-2">
-        🏭 Visit Our Factory
-      </a>
-      <a href="https://nikhilinternational.com" target="_blank" class="animate-on-load link-3">
-        🌐 Visit Our Website
-      </a>
+      <!-- Save Contact moved to top -->
       <a
         id="saveContactLink"
         href="data:text/vcard;charset=utf-8,BEGIN%3AVCARD%0AVERSION%3A3.0%0AFN%3ANikhil%20Sangtani%0AN%3ASangtani%3BNikhil%3B%3B%3B%0AORG%3ANikhil%20International%0ATITLE%3AProprietor%0ATEL%3BTYPE%3DWORK%2CVOICE%3A7791800501%0AADR%3BTYPE%3DWORK%3A%3B%3BA-55%20sikar%20house%3BJaipur%3B%3B%3B%0AEMAIL%3Anijaipur%40gmail.com%0AURL%3Ahttps%3A//nikhilinternational.com%0AEND%3AVCARD%0A"
-        class="animate-on-load link-4"
+        class="animate-on-load link-1"
       >
         👤 Save My Contact
       </a>
-      <a href="catalog.pdf" download="Nikhil_International_Catalog.pdf" class="animate-on-load link-5 secondary">
-        📄 Download Catalog
+
+      <a href="https://maps.app.goo.gl/HmezNhhTYAjexHAE7" target="_blank" class="animate-on-load link-2">
+        📍 Visit Our Office
+      </a>
+
+      <a href="https://maps.app.goo.gl/n365czV1mh7GMY8q8" target="_blank" class="animate-on-load link-3">
+        🏭 Visit Our Factory
+      </a>
+
+      <a href="https://nikhilinternational.com" target="_blank" class="animate-on-load link-4">
+        🌐 Visit Our Website
+      </a>
+
+      <!-- New Brochure link -->
+      <a href="Nikhil%20International%20Catalog.pdf" download="Nikhil_International_Catalog.pdf" class="animate-on-load link-5 secondary">
+        🏢 Download Our Company Brochure
+      </a>
+
+      <!-- Renamed product catalog link -->
+      <a href="catalog.pdf" download="Product_Catalog.pdf" class="animate-on-load link-6 secondary">
+        📦 Download Our Product Catalog
       </a>
     </div>
   </div>
 
   <script>
-    // Sequential animation on load
+    // Shimmer loader fade-out and content reveal
     window.addEventListener('load', () => {
-      document.querySelectorAll('.animate-on-load').forEach(el => {
-        el.style.animationPlayState = 'running';
-      });
+      const shimmer = document.getElementById('shimmer');
+      const container = document.getElementById('mainContainer');
+
+      setTimeout(() => {
+        shimmer.classList.add('fade-out');
+        container.classList.add('loaded');
+      }, 800); // short delay for smooth feel
     });
 
-    // Contact save handler
+    // Save contact handler
     const saveContactButton = document.getElementById('saveContactLink');
     saveContactButton.addEventListener('click', event => {
       event.preventDefault();
